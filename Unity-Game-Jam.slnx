@@ -1,6 +1,0 @@
-﻿<Solution>
-  <Project Path="Assembly-CSharp.csproj" />
-  <Project Path="SmoothSceneCamera.csproj" />
-  <Project Path="Sirenix.OdinInspector.Modules.UnityMathematics.csproj" />
-  <Project Path="Assembly-CSharp-firstpass.csproj" />
-</Solution>
