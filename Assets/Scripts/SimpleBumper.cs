@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class SimpleBumper : MonoBehaviour
 {
@@ -33,7 +34,7 @@ public class SimpleBumper : MonoBehaviour
             {
                 // หาทิศทาง (เป็น Vector2)
                 Vector2 bounceDirection = (collision.transform.position - transform.position).normalized;
-                
+
                 // ถีบลูกบอล (ใช้ ForceMode2D.Impulse)
                 ballRb.AddForce(bounceDirection * bounceForce, ForceMode2D.Impulse);
             }
@@ -42,8 +43,8 @@ public class SimpleBumper : MonoBehaviour
             StartCoroutine(FlashColor());
         }
     }
-
-    private System.Collections.IEnumerator FlashColor()
+    
+    private IEnumerator FlashColor()
     {
         bumperRenderer.material.color = hitColor;
         yield return new WaitForSeconds(0.1f);
