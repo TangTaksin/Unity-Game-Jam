@@ -3,13 +3,16 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
 using System;
+using UnityEditorInternal;
 
 public class Flippers : MonoBehaviour
 {
     HingeJoint2D _joint;
     Rigidbody2D _rigidbody2D;
 
-    public KeyCode flipperKey;
+    public Side flipperSide;
+
+    InputAction action_flip;
     bool isFlipping;
 
     public float travelTime = .1f;
@@ -26,22 +29,29 @@ public class Flippers : MonoBehaviour
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _joint = GetComponent<HingeJoint2D>();
 
+        switch (flipperSide)
+        {
+            case Side.Left:
+                action_flip = InputSystem.actions.FindAction("Flipleft");
+                break;
+            case Side.Right:
+                action_flip = InputSystem.actions.FindAction("FlipRight");
+                break;
+        }
+
+        action_flip.started += Flip;
+        action_flip.canceled += Flip;
     }
 
-    private void Update()
+    private void OnDisable()
     {
-        if (Input.GetKeyDown(flipperKey))
-        {
-            Flip(true);
-        }
-        else if (Input.GetKeyUp(flipperKey))
-        {
-            Flip(false);
-        }
+        action_flip.started -= Flip;
+        action_flip.canceled -= Flip;
     }
 
-    void Flip(bool isFlipping)
+    void Flip(InputAction.CallbackContext context)
     {
+        isFlipping = context.started;
         targetAngle = isFlipping ? flipperActiveAngle : flipperRestAngle;
 
         _rigidbody2D.DOComplete();

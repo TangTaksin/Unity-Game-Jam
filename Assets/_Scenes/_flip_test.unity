@@ -1461,6 +1461,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlipperL
       objectReference: {fileID: 0}
+    - target: {fileID: 609782199437545437, guid: b2607839438f0b44ba195a279dc1b0df, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9009972522093698499, guid: b2607839438f0b44ba195a279dc1b0df, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2
