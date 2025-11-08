@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b163f9ce646b97459980bdb0fc46105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Flippers
-  flipperKey: 120
+  flipperSide: 1
   travelTime: 0.05
   flipperRestAngle: 30
   flipperActiveAngle: -30
@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b163f9ce646b97459980bdb0fc46105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Flippers
-  flipperKey: 122
+  flipperSide: 0
   travelTime: 0.05
   flipperRestAngle: 150
   flipperActiveAngle: 210
