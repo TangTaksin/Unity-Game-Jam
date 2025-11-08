@@ -2097,7 +2097,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e38ea7b9fc2e3a141be83f5c7777220a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LauncherTrigger
-  launchKey: 32
   maxChargeForce: 100
   chargeRate: 30
   launchDirection: {x: 0, y: 1}

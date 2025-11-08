@@ -1,40 +1,60 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class LauncherTrigger : MonoBehaviour
 {
     [Header("Launcher Settings")]
-    public KeyCode launchKey = KeyCode.Space;
     public float maxChargeForce = 100f;
     public float chargeRate = 30f;
     public Vector2 launchDirection = Vector2.up;
 
     [Header("References")]
-    public Slider chargeSlider; // (Optional)
+    public Slider chargeSlider;
 
-    private Rigidbody2D currentBall; // ลูกบอลที่ "กำลังจะยิง"
+    private Rigidbody2D currentBall;
     private float currentCharge;
     private bool isBallReady;
+    private bool isCharging;
+
+    // Input System action
+    private InputAction launchAction;
+
+    void Awake()
+    {
+        launchAction = InputSystem.actions.FindAction("LaunchBall");
+    }
+
+    void OnEnable()
+    {
+        launchAction.Enable();
+        launchAction.started += OnLaunchStarted;
+        launchAction.canceled += OnLaunchCanceled;
+    }
+
+    void OnDisable()
+    {
+        launchAction.started -= OnLaunchStarted;
+        launchAction.canceled -= OnLaunchCanceled;
+        launchAction.Disable();
+    }
 
     void Start()
     {
-        // ตั้งค่า Slider (Optional)
         if (chargeSlider != null)
         {
             chargeSlider.maxValue = maxChargeForce;
             chargeSlider.value = 0;
             chargeSlider.gameObject.SetActive(false);
         }
+
         isBallReady = false;
         currentBall = null;
+        isCharging = false;
     }
 
-    // --- นี่คือ Logic ใหม่ ---
-
-    // เมื่อ "ลูกบอล" เข้ามาในพื้นที่ยิง
     void OnTriggerEnter2D(Collider2D other)
     {
-        // ตรวจสอบว่าเป็นลูกบอล และยังไม่มียิงลูกอื่นค้างไว้
         if (other.CompareTag("Ball") && !isBallReady)
         {
             Debug.Log("Ball is ready to launch!");
@@ -50,16 +70,15 @@ public class LauncherTrigger : MonoBehaviour
         }
     }
 
-    // เมื่อ "ลูกบอล" ถูกยิงออกไปจากพื้นที่
     void OnTriggerExit2D(Collider2D other)
     {
-        // ตรวจสอบว่าใช่ลูกบอลที่เราเพิ่งยิงไปหรือไม่
-        if (other.CompareTag("Ball") && other.gameObject == currentBall.gameObject)
+        if (other.CompareTag("Ball") && currentBall != null && other.gameObject == currentBall.gameObject)
         {
             Debug.Log("Ball has been launched!");
             isBallReady = false;
             currentBall = null;
             currentCharge = 0f;
+            isCharging = false;
 
             if (chargeSlider != null)
             {
@@ -68,34 +87,37 @@ public class LauncherTrigger : MonoBehaviour
         }
     }
 
-    // --- จบ Logic ใหม่ ---
-
     void Update()
     {
-        // Logic การชาร์จและยิง (เหมือนเดิม แต่มีการแก้ Bug)
+        if (isBallReady && currentBall != null && isCharging)
+        {
+            currentCharge = Mathf.Min(currentCharge + chargeRate * Time.deltaTime, maxChargeForce);
+            if (chargeSlider != null)
+                chargeSlider.value = currentCharge;
+        }
+    }
+
+    private void OnLaunchStarted(InputAction.CallbackContext context)
+    {
+        if (isBallReady)
+        {
+            isCharging = true;
+            currentCharge = 0f;
+            Debug.Log("Charging...");
+        }
+    }
+
+    private void OnLaunchCanceled(InputAction.CallbackContext context)
+    {
         if (isBallReady && currentBall != null)
         {
-            if (Input.GetKey(launchKey))
-            {
-                currentCharge = Mathf.Min(currentCharge + chargeRate * Time.deltaTime, maxChargeForce);
-                if (chargeSlider != null) chargeSlider.value = currentCharge;
-            }
+            currentBall.AddForce(launchDirection.normalized * currentCharge, ForceMode2D.Impulse);
+            Debug.Log($"Ball launched with force: {currentCharge}");
 
-            if (Input.GetKeyUp(launchKey))
-            {
-                // ยิงลูกบอลด้วยพลังที่มี
-                currentBall.AddForce(launchDirection.normalized * currentCharge, ForceMode2D.Impulse);
-
-                // *** แก้ Bug: เราจะ "ไม่" ตั้ง isBallReady = false ที่นี่ ***
-                // เราจะปล่อยให้ OnTriggerExit2D เป็นคนจัดการเมื่อลูกบอลออกจากพื้นที่ไปแล้ว
-
-                // เรารีเซ็ตแค่พลังชาร์จ
-                currentCharge = 0f;
-                if (chargeSlider != null)
-                {
-                    chargeSlider.value = 0;
-                }
-            }
+            currentCharge = 0f;
+            isCharging = false;
+            if (chargeSlider != null)
+                chargeSlider.value = 0;
         }
     }
 }
