@@ -490,7 +490,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &94803822
 RectTransform:
@@ -3579,7 +3579,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1864707968}
-  m_LocalRotation: {x: -0, y: -0, z: 0.7635387, w: 0.645762}
+  m_LocalRotation: {x: -0, y: -0, z: 0.78485817, w: 0.61967546}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3588,11 +3588,11 @@ RectTransform:
   - {fileID: 304486518}
   - {fileID: 1717260420}
   m_Father: {fileID: 94803822}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 99.554}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 103.415}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1575, y: -337}
-  m_SizeDelta: {x: 500, y: 100}
+  m_AnchoredPosition: {x: 764, y: -155}
+  m_SizeDelta: {x: 250, y: 83.333336}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1864707970
 MonoBehaviour:
