@@ -7,7 +7,6 @@ using UnityEditorInternal;
 
 public class Flippers : MonoBehaviour
 {
-    HingeJoint2D _joint;
     Rigidbody2D _rigidbody2D;
 
     public Side flipperSide;
@@ -19,6 +18,7 @@ public class Flippers : MonoBehaviour
     float targetAngle;
     public float flipperRestAngle = -45;
     public float flipperActiveAngle = 45;
+    public AudioClip flipSound;
 
 
     private void Start()
@@ -27,7 +27,6 @@ public class Flippers : MonoBehaviour
         transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, targetAngle);
 
         _rigidbody2D = GetComponent<Rigidbody2D>();
-        _joint = GetComponent<HingeJoint2D>();
 
         switch (flipperSide)
         {
@@ -54,8 +53,15 @@ public class Flippers : MonoBehaviour
         isFlipping = context.started;
         targetAngle = isFlipping ? flipperActiveAngle : flipperRestAngle;
 
+        if (context.started && flipSound != null && AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySFX(flipSound);
+        }
+
+
         _rigidbody2D.DOComplete();
         _rigidbody2D.DORotate(targetAngle, travelTime).SetEase(Ease.Linear);
+
     }
 
 }

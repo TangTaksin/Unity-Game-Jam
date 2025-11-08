@@ -9,6 +9,7 @@ public class SimpleBumper : MonoBehaviour
     public Renderer bumperRenderer; // ลาก Sprite Renderer มาใส่
     public Color hitColor = Color.yellow;
     private Color originalColor;
+    public AudioClip hitSound;
 
     void Start()
     {
@@ -27,6 +28,11 @@ public class SimpleBumper : MonoBehaviour
             // 1. เพิ่มคะแนน
             // ScoreManager.instance.AddScore(scoreValue);
             Debug.Log("Hit! Score: " + scoreValue);
+            // เล่นเสียง
+            if (hitSound != null && AudioManager.instance != null)
+            {
+                AudioManager.instance.PlaySFX(hitSound);
+            }
 
             // 2. ถีบลูกบอลออกไป!
             Rigidbody2D ballRb = collision.gameObject.GetComponent<Rigidbody2D>();
