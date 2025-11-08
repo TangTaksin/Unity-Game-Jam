@@ -2,20 +2,18 @@ using UnityEngine;
 
 public class DrainAndRespawn : MonoBehaviour
 {
-    // ลาก "จุดเกิด" (RespawnPoint) มาใส่
+// ลาก "จุดเกิด" (RespawnPoint) มาใส่
     public Transform respawnPoint;
-    
-    // ลาก "PlungerManager" GameObject มาใส่
-    public Plunger2D plunger;
+
+    // *** ไม่ต้องมี Plunger2D plunger อีกต่อไป ***
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        // ตรวจสอบว่า "Ball" ตกลงมา (ต้องตั้ง Tag "Ball" ให้ลูกบอล)
         if (other.CompareTag("Ball"))
         {
-            if (respawnPoint == null || plunger == null)
+            if (respawnPoint == null)
             {
-                Debug.LogError("Drain: ยังไม่ได้ตั้งค่า Respawn Point หรือ Plunger!");
+                Debug.LogError("Drain: ยังไม่ได้ตั้งค่า Respawn Point!");
                 return;
             }
 
@@ -32,8 +30,15 @@ public class DrainAndRespawn : MonoBehaviour
                 ballRb.angularVelocity = 0f;
             }
 
-            // 3. บอก Plunger ว่า "พร้อมยิงลูกใหม่"
-            plunger.SetBallReady(ball);
+            // *** ไม่ต้องเรียก plunger.SetBallReady() อีกต่อไป ***
+            // เพราะเดี๋ยว "จุดเกิด" จะไปเรียก OnTriggerEnter2D ของ LauncherTrigger เอง
+            
+            // (Optional) บอก ScoreManager ให้รีเซ็ตคะแนน
+            // if (ScoreManager.instance != null)
+            // {
+            //     ScoreManager.instance.SaveHighScore();
+            //     ScoreManager.instance.ResetScore();
+            // }
         }
     }
 }

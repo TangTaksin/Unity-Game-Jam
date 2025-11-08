@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI; // สำหรับ Slider (Optional)
+using UnityEngine.UI;
 
 public class Plunger2D : MonoBehaviour
 {
@@ -10,13 +10,8 @@ public class Plunger2D : MonoBehaviour
     public Vector2 launchDirection = Vector2.up;
 
     [Header("References")]
-    // (Optional) ลาก Slider UI มาใส่
     public Slider chargeSlider;
-    
-    // ลาก "ลูกบอล" ตัวแรกใน Scene มาใส่
     public GameObject initialBall;
-    
-    // ลาก "จุดเกิด" (Empty GameObject) มาใส่
     public Transform respawnPoint; 
 
     private Rigidbody2D currentBall;
@@ -25,7 +20,7 @@ public class Plunger2D : MonoBehaviour
 
     void Start()
     {
-        // ตั้งค่า Slider (Optional)
+        // (ส่วน Start เหมือนเดิม ไม่ต้องแก้)
         if (chargeSlider != null)
         {
             chargeSlider.maxValue = maxChargeForce;
@@ -33,7 +28,6 @@ public class Plunger2D : MonoBehaviour
             chargeSlider.gameObject.SetActive(false);
         }
 
-        // ตรวจสอบลูกบอลตัวแรก
         if (initialBall != null)
         {
             if (respawnPoint == null)
@@ -41,19 +35,13 @@ public class Plunger2D : MonoBehaviour
                 Debug.LogError("Plunger: ยังไม่ได้ตั้งค่า Respawn Point!");
                 return;
             }
-
-            // ย้ายลูกบอลตัวแรกไปที่จุดเกิด
             initialBall.transform.position = respawnPoint.position;
-
-            // เคลียร์ความเร็วเก่า (ถ้ามี)
             Rigidbody2D ballRb = initialBall.GetComponent<Rigidbody2D>();
             if (ballRb != null)
             {
                 ballRb.linearVelocity = Vector2.zero;
                 ballRb.angularVelocity = 0f;
             }
-            
-            // สั่งให้ Plunger พร้อมทำงาน
             SetBallReady(initialBall);
         }
         else
@@ -66,43 +54,59 @@ public class Plunger2D : MonoBehaviour
     {
         if (isBallReady)
         {
-            // กดค้างเพื่อชาร์จ
+            // (ส่วน GetKey เหมือนเดิม)
             if (Input.GetKey(launchKey))
             {
                 currentCharge = Mathf.Min(currentCharge + chargeRate * Time.deltaTime, maxChargeForce);
                 if (chargeSlider != null) chargeSlider.value = currentCharge;
             }
 
-            // ปล่อยปุ่มเพื่อยิง
+            // --- 🌟 แก้ไข Logic ตรงนี้ ---
+            
+            // เมื่อผู้เล่น "ปล่อย" ปุ่มยิง
             if (Input.GetKeyUp(launchKey))
             {
+                // 1. ยิงลูกบอลด้วยพลังที่มี (แม้จะน้อยก็ตาม)
                 if (currentBall != null)
                 {
                     currentBall.AddForce(launchDirection.normalized * currentCharge, ForceMode2D.Impulse);
                 }
+
+                // 2. ตรวจสอบว่าพลังชาร์จ "มากพอ" ที่จะยิงหรือไม่
+                // (เช่น มากกว่า 1f หรือ 5% ของ maxChargeForce)
+                float minChargeToLaunch = 1f; // ตั้งค่าขั้นต่ำ
+
+                if (currentCharge > minChargeToLaunch)
+                {
+                    // 3. ถ้ายิงสำเร็จ (พลังมากพอ) -> "ปิดการทำงาน" Plunger
+                    isBallReady = false; 
+                    
+                    if (chargeSlider != null)
+                    {
+                        chargeSlider.gameObject.SetActive(false);
+                    }
+                }
                 
-                // รีเซ็ตสถานะ
-                isBallReady = false;
+                // 4. รีเซ็ตพลังชาร์จ (ไม่ว่ายิงสำเร็จหรือไม่)
+                //    เพื่อให้การ "แตะ" ครั้งต่อไปเริ่มชาร์จใหม่
                 currentCharge = 0f;
                 if (chargeSlider != null)
                 {
                     chargeSlider.value = 0;
-                    chargeSlider.gameObject.SetActive(false);
                 }
             }
+            // --- 🌟 จบส่วนที่แก้ไข ---
         }
     }
 
-    // ฟังก์ชันนี้จะถูกเรียกโดย DrainAndRespawn
+    // (ส่วน SetBallReady เหมือนเดิม)
     public void SetBallReady(GameObject ball)
     {
         currentBall = ball.GetComponent<Rigidbody2D>();
-
         if (currentBall != null)
         {
             isBallReady = true;
             currentCharge = 0f; 
-
             if (chargeSlider != null)
             {
                 chargeSlider.gameObject.SetActive(true);
