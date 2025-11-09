@@ -4483,6 +4483,130 @@ MonoBehaviour:
     customGroups: []
     allCustomComponents:
       name: All
-      components: []
+      components:
+      - displayName: FPSCounters
+        name: FPSCounters, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: FPSCounters
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: FPSCounters
+          m_TextWithWhitespace: "FPSCounters\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 2fc4a1c7d7e5f71419593c0bff23a6bf, type: 3}
+        hasToggle: 1
+      - displayName: DrainAndRespawn
+        name: DrainAndRespawn, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: DrainAndRespawn
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: DrainAndRespawn
+          m_TextWithWhitespace: "DrainAndRespawn\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 722b9b80665123a40b7af0588d084ead, type: 3}
+        hasToggle: 1
+      - displayName: LauncherTrigger
+        name: LauncherTrigger, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: LauncherTrigger
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: LauncherTrigger
+          m_TextWithWhitespace: "LauncherTrigger\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: e38ea7b9fc2e3a141be83f5c7777220a, type: 3}
+        hasToggle: 1
+      - displayName: TriesCountDisplay
+        name: TriesCountDisplay, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: TriesCountDisplay
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: TriesCountDisplay
+          m_TextWithWhitespace: "TriesCountDisplay\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 7d7ee3b15d3127b41b8c0c052c88f7a0, type: 3}
+        hasToggle: 1
+      - displayName: GameOverPanel
+        name: GameOverPanel, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: GameOverPanel
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: GameOverPanel
+          m_TextWithWhitespace: "GameOverPanel\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 39330d38707050440bbc73b87bb771b1, type: 3}
+        hasToggle: 1
+      - displayName: ScoreDisplay
+        name: ScoreDisplay, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: ScoreDisplay
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: ScoreDisplay
+          m_TextWithWhitespace: "ScoreDisplay\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: c1459a363a455524481d6675e0ad7667, type: 3}
+        hasToggle: 1
+      - displayName: GameManager
+        name: GameManager, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: GameManager
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: GameManager
+          m_TextWithWhitespace: "GameManager\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: fa9719dca79a5b844bf60a9690507c6a, type: 3}
+        hasToggle: 1
+      - displayName: BonusTimeManager
+        name: BonusTimeManager, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: BonusTimeManager
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: BonusTimeManager
+          m_TextWithWhitespace: "BonusTimeManager\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 65f25f0ee27610d498c27f262d9c3ece, type: 3}
+        hasToggle: 1
+      - displayName: AudioManager
+        name: AudioManager, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: AudioManager
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: AudioManager
+          m_TextWithWhitespace: "AudioManager\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: e1c2fca4eb72a62488a7ea6ad33cd005, type: 3}
+        hasToggle: 1
+      - displayName: HitTarget
+        name: HitTarget, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: HitTarget
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: HitTarget
+          m_TextWithWhitespace: "HitTarget\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 95eb6096a73ae48419229979fa3fa588, type: 3}
+        hasToggle: 1
     unityVersion: 6000.2.10f1
     unityCount: 321

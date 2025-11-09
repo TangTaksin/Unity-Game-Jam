@@ -10,14 +10,21 @@ public class Pellet : MonoBehaviour
     {
         if (other.CompareTag("Ball"))
         {
-            GameManager.instance.AddScore(scoreValue);
-
-            if (eatSound != null)
+            // 2. (Optional) เพิ่มคะแนน
+            if (GameManager.instance != null)
             {
-                AudioManager.instance?.PlaySFX(eatSound);
+                GameManager.instance.AddScore(scoreValue);
             }
 
-            BonusTimeManager.instance?.NotifyPelletEaten();
+            if (AudioManager.instance != null && eatSound != null)
+            {
+                AudioManager.instance.PlaySFX(eatSound);
+            }
+
+            if (BonusTimeManager.instance != null)
+            {
+                BonusTimeManager.instance.NotifyPelletEaten();
+            }
 
             gameObject.SetActive(false);
         }

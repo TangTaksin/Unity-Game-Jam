@@ -21,6 +21,8 @@ public class GhostBumper : MonoBehaviour
     private int currentHitPoints;
     Collider2D _collider2D;
     SimpleBumper _bumper;
+    private Coroutine downTimeCoroutine;
+
 
     enum GhostState
     {
@@ -62,7 +64,12 @@ public class GhostBumper : MonoBehaviour
 
     void ExitBonus()
     {
-        StopCoroutine(DownTimeProcess());
+        if (downTimeCoroutine != null)
+        {
+            StopCoroutine(downTimeCoroutine);
+            downTimeCoroutine = null;
+        }
+
         SetState(GhostState.normal);
     }
 
@@ -81,6 +88,7 @@ public class GhostBumper : MonoBehaviour
                 break;
             case GhostState.vulnerable:
                 _collider2D.isTrigger = true;
+                spriteRenderer.enabled = true;
 
                 spriteRenderer.sprite = vulnerableSprite;
                 currentHitPoints = maxHitPoints; // รีเซ็ตเลือด
@@ -89,7 +97,10 @@ public class GhostBumper : MonoBehaviour
                 spriteRenderer.enabled = false;
                 _collider2D.isTrigger = true;
 
-                StartCoroutine(DownTimeProcess());
+                if (downTimeCoroutine != null)
+                    StopCoroutine(downTimeCoroutine);
+
+                downTimeCoroutine = StartCoroutine(DownTimeProcess());
                 break;
         }
     }

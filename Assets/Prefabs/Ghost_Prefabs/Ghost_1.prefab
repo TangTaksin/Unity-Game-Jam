@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 7605770380837334052}
   - component: {fileID: 7638933441272264171}
   - component: {fileID: 8363236725387408343}
+  - component: {fileID: 4068439907665659853}
+  - component: {fileID: 6924242013427260587}
   m_Layer: 7
   m_Name: Ghost_1
   m_TagString: Untagged
@@ -81,7 +83,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 7e36da1c28f9b2e4aa18fa3df12675d5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -106,10 +108,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleBumper
   bounceForce: 15
-  scoreValue: 100
+  scoreValue: 235
   bumperRenderer: {fileID: 0}
   hitColor: {r: 1, g: 1, b: 1, a: 1}
-  hitSound: {fileID: 8300000, guid: dde35a8854467a04d88f088a076cf53a, type: 3}
+  hitSound: {fileID: 8300000, guid: b8475db8c0c3fa34ab1c7c5a1feaa337, type: 3}
+  colorFlashDuration: 0.25
+  scalePunch: 0.2
+  punchDuration: 0.3
 --- !u!70 &7638933441272264171
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -126,7 +131,7 @@ CapsuleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 448
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -163,5 +168,48 @@ MonoBehaviour:
   vulnerableSprite: {fileID: 21300000, guid: 828b019ff2c73fd47aca2dde002e1955, type: 3}
   maxHitPoints: 1
   scoreValue: 10000
-  hitSound: {fileID: 0}
-  destroySound: {fileID: 0}
+  downTime: 5
+  hitSound: {fileID: 8300000, guid: b8475db8c0c3fa34ab1c7c5a1feaa337, type: 3}
+  destroySound: {fileID: 8300000, guid: 0d0a5805d49ee774d8af826ab758fe77, type: 3}
+--- !u!114 &4068439907665659853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4602860970311681048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cf3ddef03b4d924e930b75a194d8014, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GhostMovement
+  waypointParent: {fileID: 0}
+  moveSpeed: 2
+  waypointThreshold: 0.1
+--- !u!50 &6924242013427260587
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4602860970311681048}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 100
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 448
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
