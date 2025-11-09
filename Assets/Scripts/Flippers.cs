@@ -1,9 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
-using System;
-using UnityEditorInternal;
 
 public class Flippers : MonoBehaviour
 {
