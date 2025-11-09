@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BonusTimeManager : MonoBehaviour
@@ -14,15 +16,18 @@ public class BonusTimeManager : MonoBehaviour
     public float bonusTimeDuration = 30f; // 30 วินาที
     public float scoreMultiplier = 2.5f;
 
-    // (Optional) UI ที่จะโชว์
-    public GameObject bonusTimeUI;
-
     // ตัวแปรติดตามสถานะ
     private int currentPelletCount;
     private int currentHitCount;
+
+    Pellet[] pelletinScene;
+
     private bool isBonusTimeActive = false;
 
+    float bonusTimer;
 
+    public static Action OnBonusStart;
+    public static Action OnBonusEnd;
 
     void Awake()
     {
@@ -30,37 +35,56 @@ public class BonusTimeManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
+    private void OnEnable()
+    {
+        GameManager.OnGameStart += Initialize;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnGameStart -= Initialize;
+    }
+
     void Start()
     {
         // (Optional) หา Ghost Bumpers ทั้งหมดในฉาก (ถ้าคุณจะทำระบบทำลาย Ghost)
         // ghostBumpers = FindObjectsOfType<GhostBumper>();
 
-        InitializeBonusTime();
+        Initialize();
+    }
+
+    private void Update()
+    {
+        BonusTimerProcess();
+    }
+
+    void Initialize()
+    {
+        pelletinScene = FindObjectsByType<Pellet>(FindObjectsSortMode.None);
+
+        EndBonusTime();
     }
 
     // รีเซ็ตทุกอย่างตอนเริ่มด่าน (หรือตอน Bonus Time จบ)
-    void InitializeBonusTime()
+    void EndBonusTime()
     {
+        OnBonusEnd?.Invoke();
+
         // 1. นับเม็ดทั้งหมด (Pellets)
         //currentPelletCount = FindObjectsOfType<Pellet>().Length;
-        currentPelletCount = FindObjectsByType<Pellet>(FindObjectsSortMode.None).Length;
-        totalPelletsInLevel = currentPelletCount;
+        foreach(var pel in pelletinScene)
+        {
+            pel.gameObject.SetActive(true);
+        }
+
+        currentPelletCount = pelletinScene.Length;
 
         // 2. รีเซ็ตตัวนับการชน
         currentHitCount = 0;
 
-        // 3. รีเซ็ตสถานะ
         isBonusTimeActive = false;
 
-        // 4. (Optional) บอก ScoreManager ให้ใช้ตัวคูณปกติ
-        if (GameManager.instance != null)
-            GameManager.instance.SetMultiplier(1f);
-
-        // 5. (Optional) ซ่อน UI โบนัส
-        if (bonusTimeUI != null)
-            bonusTimeUI.SetActive(false);
-
-        Debug.Log("Level Initialized. Pellets: " + totalPelletsInLevel + ", Hits Required: " + hitsRequiredForBonus);
+        GameManager.instance?.SetMultiplier(1f);
     }
 
     // --- ฟังก์ชันที่ "Pellet.cs" จะเรียก ---
@@ -96,46 +120,40 @@ public class BonusTimeManager : MonoBehaviour
         if (targetsHit && !isBonusTimeActive)
         {
             // 3. เริ่ม Bonus Time!
-            StartCoroutine(BonusTimeSequence());
+            StartBonusTime();
         }
 
         if (pelletsCleared && !isBonusTimeActive)
         {
             Debug.Log("All pellets eaten!");
-            StartCoroutine(BonusTimeSequence());
+            StartBonusTime();
         }
     }
 
-    // --- Coroutine สำหรับ Bonus Time ---
-    private IEnumerator BonusTimeSequence()
+    void StartBonusTime()
     {
-        Debug.Log("--- BONUS TIME STARTED! ---");
         isBonusTimeActive = true;
+        OnBonusStart?.Invoke();
 
-        // 1. (Optional) โชว์ UI
-        if (bonusTimeUI != null)
-            bonusTimeUI.SetActive(true);
+        bonusTimer = bonusTimeDuration;
 
-        // 2. (Optional) บอก ScoreManager ให้คูณ 2.5
-        if (GameManager.instance != null)
-            GameManager.instance.SetMultiplier(scoreMultiplier);
+        GameManager.instance?.SetMultiplier(scoreMultiplier);
+    }
 
-        // 3. (Optional) บอก Ghost Bumpers ให้ "อ่อนแอ"
-        // foreach (GhostBumper ghost in ghostBumpers)
-        // {
-        //     ghost.SetVulnerable(true);
-        // }
+    void BonusTimerProcess()
+    {
+        if (!isBonusTimeActive)
+            return;
 
-        // 4. รอตามเวลาที่กำหนด
-        yield return new WaitForSeconds(bonusTimeDuration);
+        bonusTimer -= Time.deltaTime;
 
-        // 5. เมื่อเวลาหมด
-        Debug.Log("--- BONUS TIME ENDED! ---");
+        // end and reset bonus time
+        if (bonusTimer <= 0)
+            EndBonusTime();
+    }
 
-        // 6. (Optional) คำนวณแจ็คพอตใหญ่ (ถ้าทำลาย Ghost หมด)
-        // ... (Logic ตรวจสอบ Ghost) ...
-
-        // 7. รีเซ็ตด่าน (Level Reset)
-        InitializeBonusTime();
+    public (float, float) GetTimers()
+    {
+        return (bonusTimer, bonusTimeDuration);
     }
 }

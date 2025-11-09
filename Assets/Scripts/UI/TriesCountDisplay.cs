@@ -20,7 +20,7 @@ public class TriesCountDisplay : MonoBehaviour
 
     void UpdateDisplay(int cur_tries)
     {
-        var scoreTxt = string.Format("tries: {0}", cur_tries);
+        var scoreTxt = string.Format("{0}", cur_tries);
         triesTMP.text = scoreTxt;
     }
 }
