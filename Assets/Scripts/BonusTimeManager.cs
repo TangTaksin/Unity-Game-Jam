@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 public class BonusTimeManager : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class BonusTimeManager : MonoBehaviour
     private int currentHitCount;
 
     Pellet[] pelletinScene;
+    
 
     private bool isBonusTimeActive = false;
 
@@ -28,6 +30,8 @@ public class BonusTimeManager : MonoBehaviour
 
     public static Action OnBonusStart;
     public static Action OnBonusEnd;
+
+
 
     void Awake()
     {
@@ -130,6 +134,7 @@ public class BonusTimeManager : MonoBehaviour
         }
     }
 
+    [Button("Trigger Bonus")]
     void StartBonusTime()
     {
         isBonusTimeActive = true;

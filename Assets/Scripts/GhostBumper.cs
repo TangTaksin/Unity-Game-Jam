@@ -10,6 +10,8 @@ public class GhostBumper : MonoBehaviour
     [Header("Stats")]
     public int maxHitPoints = 3;     // จำนวนครั้งที่ต้องชน
     public int scoreValue = 10000;   // คะแนนที่ได้ตอนทำลาย
+    public float downTime = 7f;
+
 
     [Header("Feedback (Optional)")]
     public AudioClip hitSound;
@@ -17,46 +19,87 @@ public class GhostBumper : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
     private int currentHitPoints;
-    private bool isVulnerable = false;
+    Collider2D _collider2D;
+    SimpleBumper _bumper;
+
+    enum GhostState
+    {
+        normal,
+        vulnerable,
+        down
+    }
+    GhostState cur_state = GhostState.normal;
+
     private Coroutine flashCoroutine;
 
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        _collider2D = GetComponent<Collider2D>();
+        _bumper = GetComponent<SimpleBumper>();
         // เริ่มเกมมาให้ Reset Ghost 1 ครั้ง
-        ResetGhost();
+        SetState(GhostState.normal);
+    }
+
+    private void OnEnable()
+    {
+        BonusTimeManager.OnBonusStart += EnterBonus;
+        BonusTimeManager.OnBonusEnd += ExitBonus;
+    }
+
+    private void OnDisable()
+    {
+        BonusTimeManager.OnBonusStart -= EnterBonus;
+        BonusTimeManager.OnBonusEnd -= ExitBonus;
     }
 
     // --- ฟังก์ชัน "สาธารณะ" ที่ BonusTimeManager จะเรียก ---
 
-    // BonusTimeManager เรียกฟังก์ชันนี้ ตอน "เริ่ม" Bonus Time
-    public void SetVulnerable(bool vulnerable)
+    void EnterBonus()
     {
-        isVulnerable = vulnerable;
-        if (isVulnerable)
-        {
-            spriteRenderer.sprite = vulnerableSprite;
-            currentHitPoints = maxHitPoints; // รีเซ็ตเลือด
-        }
-        else
-        {
-            spriteRenderer.sprite = normalSprite;
-        }
+        SetState(GhostState.vulnerable);
     }
 
-    // BonusTimeManager เรียกฟังก์ชันนี้ ตอน "จบ" Bonus Time
-    public void ResetGhost()
+    void ExitBonus()
     {
-        gameObject.SetActive(true); // "เกิดใหม่" (ถ้าถูก SetActive(false) ไป)
-        SetVulnerable(false);       // กลับร่างปกติ
+        StopCoroutine(DownTimeProcess());
+        SetState(GhostState.normal);
+    }
+
+    // BonusTimeManager เรียกฟังก์ชันนี้ ตอน "เริ่ม" Bonus Time
+    void SetState(GhostState state)
+    {
+        cur_state = state;
+
+        switch (cur_state)
+        {
+            case GhostState.normal:
+                spriteRenderer.enabled = true;
+                _collider2D.isTrigger = false;
+
+                spriteRenderer.sprite = normalSprite;
+                break;
+            case GhostState.vulnerable:
+                _collider2D.isTrigger = true;
+
+                spriteRenderer.sprite = vulnerableSprite;
+                currentHitPoints = maxHitPoints; // รีเซ็ตเลือด
+                break;
+            case GhostState.down:
+                spriteRenderer.enabled = false;
+                _collider2D.isTrigger = true;
+
+                StartCoroutine(DownTimeProcess());
+                break;
+        }
     }
 
     // --- Logic การชน ---
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         // 1. ถ้า "ไม่" อยู่ในโหมดโบนัส -> ไม่ต้องทำอะไรเลย (อมตะ)
-        if (!isVulnerable) return;
+        if (cur_state != GhostState.vulnerable) return;
 
         // 2. ถ้าอยู่ในโหมดโบนัส และชนกับ "Ball"
         if (collision.gameObject.CompareTag("Ball"))
@@ -107,7 +150,13 @@ public class GhostBumper : MonoBehaviour
         }
 
         // 5. (ตามที่คุณขอ!) "ซ่อน" ตัวเอง
-        gameObject.SetActive(false);
+        SetState(GhostState.down);
+    }
+
+    IEnumerator DownTimeProcess()
+    {
+        yield return new WaitForSeconds(downTime);
+        SetState(GhostState.vulnerable);
     }
 
     // (Optional) Coroutine กระพริบตัว
