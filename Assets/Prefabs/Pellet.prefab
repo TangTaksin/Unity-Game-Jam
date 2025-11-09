@@ -151,4 +151,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pellet
   scoreValue: 200
-  eatSound: {fileID: 8300000, guid: dde35a8854467a04d88f088a076cf53a, type: 3}
+  eatSound: {fileID: 8300000, guid: ca92b2d050e629946addbe6d60bb3df5, type: 3}

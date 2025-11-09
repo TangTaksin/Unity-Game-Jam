@@ -5,6 +5,7 @@ public class GameOverPanel : MonoBehaviour
 {
     public GameObject gameoverPanel;
     public TextMeshProUGUI scoreTMPUI;
+    [SerializeField] private AudioClip gameOverSound;
 
     private void OnEnable()
     {
@@ -25,6 +26,10 @@ public class GameOverPanel : MonoBehaviour
 
         var scoreTxt = string.Format("{0}", score);
         scoreTMPUI.text = scoreTxt;
+        if (gameOverSound != null)
+        {
+            AudioManager.instance.PlaySFX(gameOverSound);
+        }
     }
 
     public void PlayAgain()

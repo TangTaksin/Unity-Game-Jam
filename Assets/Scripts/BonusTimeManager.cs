@@ -11,7 +11,7 @@ public class BonusTimeManager : MonoBehaviour
 
     [Header("Bonus Conditions")]
     public int totalPelletsInLevel; // (จะถูกตั้งค่าอัตโนมัติ)
-    public int hitsRequiredForBonus = 5; // จำนวนครั้งที่ "เป้าหมาย" ต้องถูกชน
+    public int hitsRequiredForBonus = 3; // จำนวนครั้งที่ "เป้าหมาย" ต้องถูกชน
 
     [Header("Bonus State")]
     public float bonusTimeDuration = 30f; // 30 วินาที
@@ -22,7 +22,8 @@ public class BonusTimeManager : MonoBehaviour
     private int currentHitCount;
 
     Pellet[] pelletinScene;
-    
+    private HitTarget[] targetsInScene;
+
 
     private bool isBonusTimeActive = false;
 
@@ -30,6 +31,8 @@ public class BonusTimeManager : MonoBehaviour
 
     public static Action OnBonusStart;
     public static Action OnBonusEnd;
+
+    [SerializeField] private AudioClip bonusStartSound;
 
 
 
@@ -65,6 +68,7 @@ public class BonusTimeManager : MonoBehaviour
     void Initialize()
     {
         pelletinScene = FindObjectsByType<Pellet>(FindObjectsSortMode.None);
+        targetsInScene = FindObjectsByType<HitTarget>(FindObjectsSortMode.None);
 
         EndBonusTime();
     }
@@ -76,12 +80,20 @@ public class BonusTimeManager : MonoBehaviour
 
         // 1. นับเม็ดทั้งหมด (Pellets)
         //currentPelletCount = FindObjectsOfType<Pellet>().Length;
-        foreach(var pel in pelletinScene)
+        foreach (var pel in pelletinScene)
         {
             pel.gameObject.SetActive(true);
         }
 
         currentPelletCount = pelletinScene.Length;
+
+        if (targetsInScene != null)
+        {
+            foreach (var target in targetsInScene)
+            {
+                target.ResetTarget(); // <-- เรียกฟังก์ชัน ResetTarget() ที่เราสร้างไว้!
+            }
+        }
 
         // 2. รีเซ็ตตัวนับการชน
         currentHitCount = 0;
@@ -143,6 +155,10 @@ public class BonusTimeManager : MonoBehaviour
         bonusTimer = bonusTimeDuration;
 
         GameManager.instance?.SetMultiplier(scoreMultiplier);
+        if (bonusStartSound != null)
+        {
+            AudioManager.instance.PlaySFX(bonusStartSound);
+        }
     }
 
     void BonusTimerProcess()

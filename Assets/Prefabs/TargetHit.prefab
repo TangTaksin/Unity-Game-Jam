@@ -151,5 +151,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitTarget
   scoreValue: 250
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: b9bfd74d5700c9c46b1be6f6b5d74719, type: 3}
   hitColor: {r: 0.08366704, g: 1, b: 0, a: 1}

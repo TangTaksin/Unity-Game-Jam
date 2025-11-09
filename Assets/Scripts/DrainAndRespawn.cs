@@ -12,6 +12,8 @@ public class DrainAndRespawn : MonoBehaviour
     public static Action<int> OnTriesChanged;
     // *** ไม่ต้องมี Plunger2D plunger อีกต่อไป ***
 
+    [SerializeField] private AudioClip drainSound;
+
     private void Start()
     {
         remainingTries = maxTries;
@@ -47,15 +49,11 @@ public class DrainAndRespawn : MonoBehaviour
                 ballRb.angularVelocity = 0f;
             }
 
-            // *** ไม่ต้องเรียก plunger.SetBallReady() อีกต่อไป ***
-            // เพราะเดี๋ยว "จุดเกิด" จะไปเรียก OnTriggerEnter2D ของ LauncherTrigger เอง
-            
-            // (Optional) บอก ScoreManager ให้รีเซ็ตคะแนน
-            // if (ScoreManager.instance != null)
-            // {
-            //     ScoreManager.instance.SaveHighScore();
-            //     ScoreManager.instance.ResetScore();
-            // }
+            // 3. (ถ้ามี) เล่นเสียง
+            if (drainSound != null)
+            {
+                AudioManager.instance.PlaySFX(drainSound);
+            }
         }
     }
 }

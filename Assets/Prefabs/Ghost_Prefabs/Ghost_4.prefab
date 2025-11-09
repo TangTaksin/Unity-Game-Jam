@@ -83,7 +83,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 0321dd78d944edc469fc2414d6025f33, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -111,7 +111,7 @@ CapsuleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 448
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleBumper
   bounceForce: 15
-  scoreValue: 100
+  scoreValue: 235
   bumperRenderer: {fileID: 0}
   hitColor: {r: 1, g: 1, b: 1, a: 1}
   hitSound: {fileID: 8300000, guid: b8475db8c0c3fa34ab1c7c5a1feaa337, type: 3}
@@ -168,8 +168,9 @@ MonoBehaviour:
   vulnerableSprite: {fileID: 21300000, guid: 828b019ff2c73fd47aca2dde002e1955, type: 3}
   maxHitPoints: 1
   scoreValue: 10000
-  hitSound: {fileID: 0}
-  destroySound: {fileID: 0}
+  downTime: 5
+  hitSound: {fileID: 8300000, guid: b8475db8c0c3fa34ab1c7c5a1feaa337, type: 3}
+  destroySound: {fileID: 8300000, guid: 0d0a5805d49ee774d8af826ab758fe77, type: 3}
 --- !u!114 &2071772298281709236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,7 +184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GhostMovement
   waypointParent: {fileID: 0}
-  moveSpeed: 3
+  moveSpeed: 2
   waypointThreshold: 0.1
 --- !u!50 &5144013506766441012
 Rigidbody2D:
@@ -193,11 +194,11 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2733731964332383454}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 10
+  m_Mass: 100
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0

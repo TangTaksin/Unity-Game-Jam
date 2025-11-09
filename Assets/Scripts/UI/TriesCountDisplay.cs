@@ -3,24 +3,35 @@ using UnityEngine;
 
 public class TriesCountDisplay : MonoBehaviour
 {
-    TextMeshPro triesTMP;
+    private TextMeshPro triesTMP;         // สำหรับ TextMeshPro (3D)
+    private TextMeshProUGUI triesTMP_UI;  // สำหรับ TextMeshPro (UI)
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void OnEnable()
     {
+        // ตรวจหาทั้งสองแบบ
         triesTMP = GetComponent<TextMeshPro>();
+        triesTMP_UI = GetComponent<TextMeshProUGUI>();
 
+        // สมัครอีเวนต์
         DrainAndRespawn.OnTriesChanged += UpdateDisplay;
     }
 
-    private void OnDisable()
+    void OnDisable()
     {
         DrainAndRespawn.OnTriesChanged -= UpdateDisplay;
     }
 
-    void UpdateDisplay(int cur_tries)
+    private void UpdateDisplay(int curTries)
     {
-        var scoreTxt = string.Format("{0}", cur_tries);
-        triesTMP.text = scoreTxt;
+        // 👉 แสดงข้อความในรูปแบบ "x 3"
+        string displayText = $": {curTries}";
+
+        // อัปเดต TMP ที่เจอ
+        if (triesTMP != null)
+            triesTMP.text = displayText;
+        else if (triesTMP_UI != null)
+            triesTMP_UI.text = displayText;
+        else
+            Debug.LogWarning($"[{nameof(TriesCountDisplay)}] No TextMeshPro component found on {name}!");
     }
 }
