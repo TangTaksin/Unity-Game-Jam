@@ -1,59 +1,117 @@
 using UnityEngine;
+using DG.Tweening;
 
 public class SimpleBumper : MonoBehaviour
 {
- public float bounceForce = 15f; // แรงถีบ (2D ใช้ค่าน้อยกว่า 3D)
+    [Header("Bumper Settings")]
+    public float bounceForce = 15f;
     public int scoreValue = 100;
 
-    public Renderer bumperRenderer; // ลาก Sprite Renderer มาใส่
+    [Header("Visuals")]
+    public Renderer bumperRenderer;
     public Color hitColor = Color.yellow;
     private Color originalColor;
+
+    [Header("Audio")]
     public AudioClip hitSound;
+
+    [Header("Tween Settings")]
+    public float colorFlashDuration = 0.25f;
+    public float scalePunch = 0.2f;
+    public float punchDuration = 0.3f;
+
+    private Vector3 originalScale;
 
     void Start()
     {
         if (bumperRenderer == null)
             bumperRenderer = GetComponent<Renderer>();
-        
-        // สำหรับ Sprite Renderer เราต้องใช้ material.color
-        originalColor = bumperRenderer.material.color; 
+
+        // Cache originals
+        if (bumperRenderer != null)
+            originalColor = bumperRenderer.material.color;
+
+        originalScale = transform.localScale;
     }
 
-    // สำคัญมาก: ต้องเป็น OnCollisionEnter2D
+    // Also update originalScale in editor when values change
+    void OnValidate()
+    {
+        // Prevent altering runtime values in editor, but keep sensible defaults
+        if (!Application.isPlaying)
+            originalScale = transform.localScale;
+    }
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ball"))
         {
-            // 1. เพิ่มคะแนน
-            // ScoreManager.instance.AddScore(scoreValue);
-            Debug.Log("Hit! Score: " + scoreValue);
-            // เล่นเสียง
-            if (hitSound != null && AudioManager.instance != null)
-            {
-                AudioManager.instance.PlaySFX(hitSound);
-            }
+            if (GameManager.instance != null)
+                GameManager.instance.AddScore(scoreValue);
 
-            // 2. ถีบลูกบอลออกไป!
+            Debug.Log("Hit! Score: " + scoreValue);
+
+            if (hitSound != null && AudioManager.instance != null)
+                AudioManager.instance.PlaySFX(hitSound);
+
             Rigidbody2D ballRb = collision.gameObject.GetComponent<Rigidbody2D>();
             if (ballRb != null)
             {
-                // หาทิศทาง (เป็น Vector2)
-                Vector2 bounceDirection = -collision.contacts[0].normal;
-                
-                // ถีบลูกบอล (ใช้ ForceMode2D.Impulse)
-                ballRb.AddForce(bounceDirection * bounceForce, ForceMode2D.Impulse);
-                GameManager.instance.AddScore(scoreValue);
+                Vector2 bounceDir = -collision.contacts[0].normal;
+                ballRb.AddForce(bounceDir * bounceForce, ForceMode2D.Impulse);
             }
 
-            // 3. กระพริบไฟ
-            StartCoroutine(FlashColor());
+            AnimateHitFeedback();
         }
     }
 
-    private System.Collections.IEnumerator FlashColor()
+    private void AnimateHitFeedback()
     {
-        bumperRenderer.material.color = hitColor;
-        yield return new WaitForSeconds(0.1f);
-        bumperRenderer.material.color = originalColor;
+        // 1) Kill any running tweens on the transform and material
+        //    (don't complete them — we want to reset)
+        transform.DOKill();
+        if (bumperRenderer != null)
+            bumperRenderer.material.DOKill();
+
+        // 2) Immediately reset transform scale to original before starting new tween
+        transform.localScale = originalScale;
+
+        // 3) Start color tween (safe-guard in case renderer is missing)
+        if (bumperRenderer != null)
+        {
+            // tween to hitColor then back to original
+            bumperRenderer.material
+                .DOColor(hitColor, colorFlashDuration * 0.5f)
+                .OnComplete(() =>
+                    bumperRenderer.material.DOColor(originalColor, colorFlashDuration * 0.5f)
+                );
+        }
+
+        // 4) Start punch scale tween (will return to originalScale)
+        transform.DOPunchScale(Vector3.one * scalePunch, punchDuration, 8, 0.5f);
+    }
+
+    // Safety: ensure scale is restored if object disabled/destroyed (editor/playmode switches etc.)
+    void OnDisable()
+    {
+        ResetVisuals();
+    }
+
+    void OnDestroy()
+    {
+        ResetVisuals();
+    }
+
+    private void ResetVisuals()
+    {
+        // Kill any tweens and restore original values
+        transform.DOKill();
+        transform.localScale = originalScale;
+
+        if (bumperRenderer != null)
+        {
+            bumperRenderer.material.DOKill();
+            bumperRenderer.material.color = originalColor;
+        }
     }
 }

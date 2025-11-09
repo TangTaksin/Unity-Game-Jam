@@ -26,7 +26,7 @@ public class Pellet : MonoBehaviour
                 BonusTimeManager.instance.NotifyPelletEaten();
             }
 
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 
