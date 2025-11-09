@@ -33,11 +33,13 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         DrainAndRespawn.OnTriesChanged += OnBallFell;
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
     {
         DrainAndRespawn.OnTriesChanged -= OnBallFell;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void Start()
@@ -47,8 +49,7 @@ public class GameManager : MonoBehaviour
 
     void HandGameStart()
     {
-        score = 0;
-        OnScoreUpdate?.Invoke(score);
+        ResetScore();
 
         OnGameStart?.Invoke();
     }
@@ -93,6 +94,10 @@ public class GameManager : MonoBehaviour
     public void BeginNewGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
         HandGameStart();
     }
 }
