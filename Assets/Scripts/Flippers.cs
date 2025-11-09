@@ -46,6 +46,8 @@ public class Flippers : MonoBehaviour
     {
         action_flip.started -= Flip;
         action_flip.canceled -= Flip;
+
+        _rigidbody2D.DOComplete();
     }
 
     void Flip(InputAction.CallbackContext context)

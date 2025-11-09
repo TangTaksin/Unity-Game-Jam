@@ -1,11 +1,22 @@
+using System;
 using UnityEngine;
 
 public class DrainAndRespawn : MonoBehaviour
 {
-// ลาก "จุดเกิด" (RespawnPoint) มาใส่
+    public int maxTries = 3;
+    int remainingTries;
+
+    // ลาก "จุดเกิด" (RespawnPoint) มาใส่
     public Transform respawnPoint;
 
+    public static Action<int> OnTriesChanged;
     // *** ไม่ต้องมี Plunger2D plunger อีกต่อไป ***
+
+    private void Start()
+    {
+        remainingTries = maxTries;
+        OnTriesChanged?.Invoke(remainingTries);
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -16,6 +27,12 @@ public class DrainAndRespawn : MonoBehaviour
                 Debug.LogError("Drain: ยังไม่ได้ตั้งค่า Respawn Point!");
                 return;
             }
+
+            remainingTries--;
+            OnTriesChanged?.Invoke(remainingTries);
+
+            if (remainingTries <= 0)
+                return;
 
             GameObject ball = other.gameObject;
 
