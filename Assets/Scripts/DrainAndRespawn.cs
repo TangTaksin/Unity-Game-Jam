@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DrainAndRespawn : MonoBehaviour
 {
-    public int maxTries = 3;
+    [SerializeField] private int maxTries = 3;
     int remainingTries;
 
     // ลาก "จุดเกิด" (RespawnPoint) มาใส่
